@@ -13,7 +13,7 @@ public class WorldManager : MonoBehaviour
         Instance = this;
         // debugField.text = SystemInfo.graphicsDeviceType.ToString();
     }
-    public void ButtonClicked(int id)
+    public void Goto(int id)
     {
         cameraInGame.SetDestination(all[id].transform.position);
     }

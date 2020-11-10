@@ -25,8 +25,10 @@ public class InputManager : MonoBehaviour
         {
             float _x = initialPos.x - Input.mousePosition.x;
             float _rot_y = initialRot.y + _x;
-            cam.transform.localEulerAngles = (new Vector3(0, _rot_y, 0));
+            cam.SetMouseRotation(_rot_y);
         }
+        else if(!cam.travelling)
+            cam.beingRotate = false;
         return;
 
         if (Input.GetMouseButtonDown(0))
