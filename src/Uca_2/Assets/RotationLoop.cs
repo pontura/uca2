@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class RotationLoop : MonoBehaviour
 {
+    public SkinnedMeshRenderer smr;
+    public float value = 1;
+    public int num = 0;
     public float speed = 10;
+
     private void Start()
     {
-        transform.Rotate(Vector3.up * Random.Range(0,360));
+      //  transform.Rotate(Vector3.up * Random.Range(0,360));
     }
     void Update()
     {
-        transform.Rotate(Vector3.up * Time.deltaTime * speed);
+        smr.SetBlendShapeWeight(num,  value);
+      //  transform.Rotate(Vector3.up * Time.deltaTime * speed);
     }
 }
