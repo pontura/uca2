@@ -8,6 +8,7 @@ public class InputManager : MonoBehaviour
     bool rotating;
     Vector2 initialPos;
     Vector2 initialRot;
+    Vector2 pivotInitialRot;
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -15,6 +16,7 @@ public class InputManager : MonoBehaviour
             rotating = true;
             initialPos = Input.mousePosition;
             initialRot = cam.transform.localEulerAngles;
+            pivotInitialRot = cam.pivot.transform.localEulerAngles;
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -23,9 +25,16 @@ public class InputManager : MonoBehaviour
         }
         if (rotating && initialPos != Vector2.zero)
         {
-            float _x = initialPos.x - Input.mousePosition.x;
+            float _x = (initialPos.x - Input.mousePosition.x)/ 3;
             float _rot_y = initialRot.y + _x;
-            cam.SetMouseRotation(_rot_y);
+
+            float _y = initialPos.y - Input.mousePosition.y;
+            float _rot_x = (pivotInitialRot.x + _y/2);
+            if (_rot_x < 0)
+                _rot_x = 0;
+            else if (_rot_x > 30)
+                _rot_x = 30;
+            cam.SetMouseRotation(_rot_y, _rot_x/2);
         }
         else if(!cam.travelling)
             cam.beingRotate = false;

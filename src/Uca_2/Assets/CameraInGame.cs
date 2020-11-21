@@ -15,7 +15,20 @@ public class CameraInGame : MonoBehaviour
     public float YSpeed;
     public bool beingRotate;
     public bool travelling;
+    public float initialOffset = -1.25f;
 
+    private void Start()
+    {
+        Events.OnEnterEntranceSignal += OnEnterEntranceSignal;
+    }
+    private void OnDestroy()
+    {
+        Events.OnEnterEntranceSignal -= OnEnterEntranceSignal;
+    }
+    private void OnEnterEntranceSignal()
+    {
+        initialOffset = 0;
+    }
     public void SetDestination(Vector3 _dest)
     {
         beingRotate = false;
@@ -59,9 +72,13 @@ public class CameraInGame : MonoBehaviour
 
         transform.position = Vector3.Lerp(transform.position, pos, camSpeed * Time.deltaTime);
     }
-    public void SetMouseRotation(float rot_y)
+    public void SetMouseRotation(float rot_y,float rot_x)
     {
         beingRotate = true;
         transform.localEulerAngles = (new Vector3(0, rot_y, 0));
+
+        Vector3 newPivotRot = pivot.transform.eulerAngles;
+        newPivotRot.x = rot_x;
+        pivot.transform.eulerAngles = Vector3.Lerp(pivot.transform.eulerAngles, newPivotRot, 0.01f);
     }
 }
