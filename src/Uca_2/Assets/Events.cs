@@ -5,5 +5,5 @@ using UnityEngine;
 public static class Events
 {
     public static System.Action<Transform> OnEntranceSignal = delegate { };
-    public static System.Action OnEnterEntranceSignal = delegate { };
+    public static System.Action<bool> OnEnterEntranceSignal = delegate { };
 }

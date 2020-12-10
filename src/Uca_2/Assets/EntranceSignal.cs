@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class EntranceSignal : MonoBehaviour
 {
-    public Transform target;
-
-    void Start()
-    {
-        
-    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "MainCamera")
@@ -26,8 +20,9 @@ public class EntranceSignal : MonoBehaviour
     }
     public void SetOn(bool isOn)
     {
+        print("ENTRA");
         if(isOn)
-            Events.OnEntranceSignal(target);
+            Events.OnEntranceSignal(transform);
         else
             Events.OnEntranceSignal(null);
     }

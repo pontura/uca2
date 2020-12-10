@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class ArtPiece : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject pivotZoom;
+    public EntranceSignal entranceSignal;
+    public Transform pivot;
+    public Vector3 pivotOffset;
+    public Vector3 pivotZoomOffset;
+    public float pivot_y_filter;
+    public float pivotZoom_y_filter;
+    public Vector3 camCenterOrientation;
+    public GameObject activateOnlyOnZoom;
+
+    private void Start()
     {
-        
+        OnZoom(false);
+        gameObject.SetActive(false);
+        Invoke("Init", 1);
+    }
+    void Init()
+    {
+        gameObject.SetActive(true);
+    }
+    public void OnZoom(bool isOn)
+    {
+        if (activateOnlyOnZoom != null)
+            activateOnlyOnZoom.SetActive(isOn);            
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

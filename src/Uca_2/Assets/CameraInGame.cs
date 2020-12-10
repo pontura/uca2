@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class CameraInGame : MonoBehaviour
 {
+    public states state;
+    public enum states
+    {
+        OUTSIDE,
+        INSIDE
+    }
+    public bool transitionZoom;
+
     public Camera cam;
     public GameObject target;
     public GameObject pivot;
@@ -15,7 +23,11 @@ public class CameraInGame : MonoBehaviour
     public float YSpeed;
     public bool beingRotate;
     public bool travelling;
-    public float initialOffset = -1.25f;
+    public Vector3  targetOffset;
+    public Animation anim;
+    public Vector3 pivotOffset;
+    public float pivot_y_filter = 200;
+    Vector3 camCenterOrientation;
 
     private void Start()
     {
@@ -25,60 +37,95 @@ public class CameraInGame : MonoBehaviour
     {
         Events.OnEnterEntranceSignal -= OnEnterEntranceSignal;
     }
-    private void OnEnterEntranceSignal()
+    private void OnEnterEntranceSignal(bool enter)
     {
-        initialOffset = 0;
+        ArtPiece artpiece = WorldManager.Instance.active;
+        artpiece.OnZoom(enter);
+        transform.eulerAngles = artpiece.camCenterOrientation;
+        pivot.transform.localEulerAngles = Vector3.zero;
+        transitionZoom = true;
+
+        if (enter)
+        {            
+            pivotOffset = artpiece.pivotZoomOffset;
+            pivot_y_filter = artpiece.pivotZoom_y_filter;
+           // dest = artpiece.pivotZoom.transform.position;
+
+           // beingRotate = false;
+           // travelling = true;
+            state = states.INSIDE;                  
+          
+        }
+        else
+        {
+            state = states.OUTSIDE;
+           // dest = artpiece.pivot.transform.position;
+            pivotOffset = artpiece.pivotOffset;
+            pivot_y_filter = artpiece.pivot_y_filter;
+           // beingRotate = false;
+            YSpeed = YInitialSpeed;
+        }
     }
-    public void SetDestination(Vector3 _dest)
-    {
+    public void SetDestination(ArtPiece artpiece)
+    {        
+        dest = artpiece.pivot.transform.position;
+        pivotOffset = artpiece.pivotOffset;
+        pivot_y_filter = artpiece.pivot_y_filter;
         beingRotate = false;
-        travelling = true;
-        YSpeed = YInitialSpeed;
-        dest = _dest;
-        dest.y = 0;
+        YSpeed = YInitialSpeed;               
     }
     private void FixedUpdate()
     {
-        if (dest == Vector3.zero)
-            return;
-        if (Vector3.Distance(transform.position, dest) < .1f)
-        {
-            travelling = false;
-            return;
-        }            
+        //if (dest == Vector3.zero)
+        //    return;
+
+        cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, new Vector3(0, targetOffset.y, pivotOffset.z), 0.1f);
+                  
 
         Vector3 pos = target.transform.position;     
         
         target.transform.position = Vector3.Lerp(pos, dest, targetSpeed * Time.deltaTime);
 
-        if (YSpeed > 0)
-            YSpeed -= YAcceleration * Time.deltaTime;
-        else
-            YSpeed = 0;
+        if (Vector3.Distance(transform.position, dest) < .01f)
+        {
+            travelling = false;
+            return;
+        }
 
-        
-        pivot.transform.localPosition = Vector3.Lerp(pivot.transform.localPosition, new Vector3(0, YSpeed, 0), 0.1f);
+            if (YSpeed > 0)
+                YSpeed -= YAcceleration * Time.deltaTime;
+            else
+                YSpeed = 0;
+            pivot.transform.localPosition = Vector3.Lerp(pivot.transform.localPosition, new Vector3(0, YSpeed, 0), 0.1f);
+      
 
         if (!beingRotate)
         {
-
             Vector3 relativePos = target.transform.position - pivot.transform.position;
             Quaternion toRotation = Quaternion.LookRotation(relativePos);
             pivot.transform.rotation = Quaternion.Lerp(pivot.transform.rotation, toRotation, 1 * Time.deltaTime);
-
-
-           // pivot.transform.LookAt(target.transform);
         }
 
-        transform.position = Vector3.Lerp(transform.position, pos, camSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, pos , camSpeed * Time.deltaTime);
     }
     public void SetMouseRotation(float rot_y,float rot_x)
     {
+        //if (transitionZoom)
+        //    return;
         beingRotate = true;
         transform.localEulerAngles = (new Vector3(0, rot_y, 0));
 
-        Vector3 newPivotRot = pivot.transform.eulerAngles;
-        newPivotRot.x = rot_x;
-        pivot.transform.eulerAngles = Vector3.Lerp(pivot.transform.eulerAngles, newPivotRot, 0.01f);
+       // Vector3 newPivotRot = pivot.transform.eulerAngles;
+
+        targetOffset.y = rot_x/ pivot_y_filter;
+        //if (rot_x < 0)
+        //    rot_x = 0;
+        //else
+        //    newPivotRot.x = rot_x;
+       // pivot.transform.eulerAngles = Vector3.Lerp(pivot.transform.eulerAngles, newPivotRot, 0.01f);
+    }
+    public void Animate(string animName)
+    {
+        anim.Play(animName);
     }
 }

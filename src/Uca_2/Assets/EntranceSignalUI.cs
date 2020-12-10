@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EntranceSignalUI : MonoBehaviour
 {
     Transform container;
     public GameObject panel;
-    public Camera cam;
+    public CameraInGame cameraInGame;
+    public Text field;
 
     void Start()
     {
         Events.OnEntranceSignal += OnEntranceSignal;
-        panel.SetActive(false);
+        OnEntranceSignal(null);
     }
     void OnDestroy()
     {
@@ -22,17 +24,32 @@ public class EntranceSignalUI : MonoBehaviour
         if (container == null)
             panel.SetActive(false);
         else
-            panel.SetActive(true);
+        {
+            panel.SetActive(true);            
+        }
         this.container = container;
     }
     void Update()
     {
         if (container == null)
             return;
-        panel.transform.position = cam.WorldToScreenPoint(container.transform.position);
+        panel.transform.position = cameraInGame.cam.WorldToScreenPoint(container.transform.position);
     }
     public void OnClicked()
     {
-        Events.OnEnterEntranceSignal();
+        print("Click " + cameraInGame.state);
+
+        if (cameraInGame.state == CameraInGame.states.OUTSIDE)
+        {
+            Events.OnEnterEntranceSignal(true);
+            field.text = "SALIR";
+        }            
+        else
+        {
+            Events.OnEnterEntranceSignal(false);
+            field.text = "ENTRAR";
+        }
+         
+        
     }
 }

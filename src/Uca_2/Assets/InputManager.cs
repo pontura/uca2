@@ -29,12 +29,12 @@ public class InputManager : MonoBehaviour
             float _rot_y = initialRot.y + _x;
 
             float _y = initialPos.y - Input.mousePosition.y;
-            float _rot_x = (pivotInitialRot.x + _y/2);
-            if (_rot_x < 0)
-                _rot_x = 0;
-            else if (_rot_x > 30)
-                _rot_x = 30;
-            cam.SetMouseRotation(_rot_y, _rot_x/2);
+            float _rot_x = (_y/4);
+            //if (_rot_x < 0)
+            //    _rot_x = 0;
+            //else if (_rot_x > 30)
+            //    _rot_x = 30;
+            cam.SetMouseRotation(_rot_y, _rot_x);
         }
         else if(!cam.travelling)
             cam.beingRotate = false;
