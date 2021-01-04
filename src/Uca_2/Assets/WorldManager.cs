@@ -16,7 +16,10 @@ public class WorldManager : MonoBehaviour
 
     public void Goto(int id)
     {
+        if(active != null)
+            active.SetState(false);
         active = all[id];
-        cameraInGame.SetDestination(active);       
+        cameraInGame.SetDestination(active);
+        active.SetState(true);
     }
 }

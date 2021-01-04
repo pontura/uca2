@@ -13,6 +13,7 @@ public class ArtPiece : MonoBehaviour
     public float pivotZoom_y_filter;
     public Vector3 camCenterOrientation;
     public GameObject activateOnlyOnZoom;
+    public GameObject activateOnSelect;
 
     private void Start()
     {
@@ -28,6 +29,11 @@ public class ArtPiece : MonoBehaviour
     {
         if (activateOnlyOnZoom != null)
             activateOnlyOnZoom.SetActive(isOn);            
+    }
+    public void SetState(bool isOn)
+    {
+        if(activateOnSelect != null)
+            activateOnSelect.SetActive(isOn);
     }
 
 }

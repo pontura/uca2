@@ -78,7 +78,8 @@ public class CameraInGame : MonoBehaviour
     {
         //if (dest == Vector3.zero)
         //    return;
-
+        if (targetOffset == null)
+            targetOffset.y = 0;
         cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, new Vector3(0, targetOffset.y, pivotOffset.z), 0.1f);
                   
 

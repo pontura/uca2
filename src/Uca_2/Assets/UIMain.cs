@@ -39,7 +39,7 @@ public class UIMain : MonoBehaviour
         }            
         else
             artistsUI.SetState(false);
-
+        GetComponent<EntranceSignalUI>().Reset();
         worldManager.Goto(id);
 
         foreach(Button b in buttons)

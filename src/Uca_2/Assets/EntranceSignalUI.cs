@@ -48,8 +48,13 @@ public class EntranceSignalUI : MonoBehaviour
         {
             Events.OnEnterEntranceSignal(false);
             field.text = "ENTRAR";
+        }        
+    }
+    public void Reset()
+    {
+        if(cameraInGame.state == CameraInGame.states.INSIDE)
+        {
+            OnClicked();
         }
-         
-        
     }
 }
