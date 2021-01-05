@@ -20,7 +20,7 @@ public class AnimationRandomizer : MonoBehaviour
         else
         {
             anim[anim.clip.name].normalizedTime = (float)(Random.Range(0, 100))/100;
-            print(anim[anim.clip.name].time);
+
         }
     }
 }

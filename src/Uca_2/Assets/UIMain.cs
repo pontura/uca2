@@ -17,9 +17,11 @@ public class UIMain : MonoBehaviour
     public ArtistsUI artistsUI;
     public ArtipieceData artipieceData;
     int lastButtonOn;
+    FullData fullData;
 
     public void Awake()
     {
+        fullData = GetComponent<FullData>();
         Instance = this;
         // debugField.text = SystemInfo.graphicsDeviceType.ToString();
        
@@ -30,7 +32,7 @@ public class UIMain : MonoBehaviour
     }
     public void ButtonClicked(int id)
     {
-        
+      
         this.lastButtonOn = id;
         if (id == 4)
         {
@@ -54,6 +56,8 @@ public class UIMain : MonoBehaviour
     Vector3 mousePos;
     private void Update()
     {
+        if (fullData.opened)
+            return;
         if (Input.GetMouseButton(0))
         {
             pressed = true;

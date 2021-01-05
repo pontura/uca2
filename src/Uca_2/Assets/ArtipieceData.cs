@@ -9,18 +9,24 @@ public class ArtipieceData : MonoBehaviour
     public Text field1;
     public Text field2;
     public Text field3;
-    public Text field4;
+    FullData fullData;
+
+    int id;
 
     public void Start()
     {
+        fullData = GetComponent<FullData>();
         SetOn(4);
     }
-
+    
     public void SetOn(int id)
     {
+        fullData = GetComponent<FullData>();
+        this.id = id;
         if (id == 4)
         {
             panel.SetActive(false);
+            fullData.Close();
             return;
         }
         panel.SetActive(true);
@@ -28,6 +34,11 @@ public class ArtipieceData : MonoBehaviour
         field1.text = settings.artworks[id].name;
         field2.text = settings.artworks[id].artist;
         field3.text = settings.artworks[id].year;
-        field4.text = settings.artworks[id].desc;
+        if (fullData.opened)
+            OpenFull();
+    }
+    public void OpenFull()
+    {
+        fullData.SetOn(id);
     }
 }
